@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+</head>
+<body>
+    <h1><%= category %> Products</h1>
+    <a href="/products/create">Add Products</a>
+    <% if(category !== 'All') { %>
+        <a href="/products">All Products</a>
+    <% } %>  
+    <!-- Jika category tidak sama dengan All, maka akan muncul link All Products -->
+    <ul>
+        <% for( let product of products) { %>
+        <li>
+            <a href="/products/<%= product.id %>">
+                <%= product.name %>- <%= product.brand %>
+            </a>
+        </li>
+        <% } %>
+    </ul>
+</body>
+</html>

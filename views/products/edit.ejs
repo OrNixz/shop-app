@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Products</title>
+</head>
+<body>
+    <h1>Edit a Product</h1>
+    <form action="/products/<%= product._id %>?_method=PUT" method="POST">
+        <label for="name">Product Name: </label>
+        <input type="text" name="name" id="name" value="<%= product.name %>"><br>
+        <label for="brand">Brand: </label>
+        <input type="text" name="brand" id="brand" value="<%= product.brand %>"><br>
+        <label for="color">Color: </label>
+        <input type="text" name="color" id="color" value="<%= product.color %>"><br>
+        <label for="price">Price: </label>
+        <input type="number" name="price" id="price" value="<%= product.price %>"><br>
+        <select name="category" id="category">
+            <option value="Accessories" <%= product.category == 'Accessories' ? 'selected' : '' %>>Accessories</option>
+            <option value="Mens Clothing <%= product.category == 'Mens Clothing' ? 'selected' : '' %>">Mens Clothing</option>
+            <option value="Swimwear" <%= product.category == 'Swimwear' ? 'selected' : '' %>>Swimwear</option>
+            <option value="Bags <%= product.category == 'Bags' ? 'selected' : '' %>">Bags</option>
+        </select><br>
+        <button type="submit">Submit</button>
+    </form>
+    <a href="/products/">All Products</a>
+</body>
+</html>
