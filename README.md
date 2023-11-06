@@ -16,6 +16,7 @@ Shop App is a simple, modest online store website on which users could perform C
 |   ├── index.ejs
 |   └── show.ejs
 ├── .gitignore
+├── README.md
 ├── index.js
 ├── package-lock.json
 ├── package.json
