@@ -32,7 +32,7 @@ Shop App is a simple, modest online store website on which users could perform C
 
 ## 3. Getting Started
 1. Make sure you have already installed Node.js and MongoDB on your system.
-2. Clone this repository or download it.
+2. Clone this repository or download it.
 3. Open CMD or Git Bash, then navigate to the project directory that you have downloaded and extracted.
 4. Please run `npm install` on the VS Code terminal to install all the required dependencies.
 5. You can run MongoDB by entering `mongod` command on the terminal.
