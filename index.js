@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const methodOverride = require('method-override');
+const ErrorHandler = require('./ErrorHandler')
 
 // Models
 const Product = require('./models/product')
@@ -40,6 +41,7 @@ app.get('/products', async (req, res) => {
 
 // Create Product
 app.get('/products/create', async (req, res) => {
+    // throw new ErrorHandler('This is a custom error', 503)
     res.render('products/create')
 });
 
@@ -57,36 +59,58 @@ app.post('/products', async (req, res) => {
 // ---------------------------------------------------------------------
 
 // Show Product
-app.get('/products/:id', async (req, res) => {
+app.get('/products/:id', async (req, res, next) => {
     // const product = await Product.findById(req.params.id);
-    const { id } = req.params;
-    const product = await Product.findById(id);
-    res.render('products/show', { product });
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id);
+        res.render('products/show', { product });
+    } catch (error) {
+        next(new ErrorHandler('Product Not Found', 404))
+    }
 });
 
 // Edit Product
-app.get('/products/:id/edit', async (req, res) => {
+app.get('/products/:id/edit', async (req, res, next) => {
     // const product = await Product.findById(req.params.id);
-    const { id } = req.params;
-    const product = await Product.findById(id);
-    res.render('products/edit', { product });
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id);
+        res.render('products/edit', { product });
+    } catch (error) {
+        next(new ErrorHandler('Product Not Found', 404))
+    }
 });
 
 // Update Product
-app.put('/products/:id', async (req, res) => {
-    const { id } = req.params;
-    const product = await Product.findByIdAndUpdate(id, req.body, { runValidators: true });
-    res.redirect(`/products/${product._id}`);
+app.put('/products/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const product = await Product.findByIdAndUpdate(id, req.body, { runValidators: true });
+        res.redirect(`/products/${product._id}`);
+    } catch (error) {
+        next(new ErrorHandler('Failed to Update products’roduct', 412))
+    }
 });
 
 // Delete Product
-app.delete('/products/:id', async (req, res) => {
-    const { id } = req.params;
-    await Product.findByIdAndDelete(id);
-    res.redirect('/products');
+app.delete('/products/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        await Product.findByIdAndDelete(id);
+        res.redirect('/products');
+    } catch (error) {
+        next(new ErrorHandler('Failed to Delete Product', 404))
+    }
 })
 
 // Sebagai tambahan taruh products/:id di paling bawah, agar yang dibaca terlebih dahulu adalah parameter create, bukan yang id
+
+// Default Error Handler
+app.use((err, req, res, next) => {
+    const { status = 500, message = 'Something Went Wrong' } = err
+    res.status(status).send(message)
+})
 
 app.listen(3000, () => {
     console.log('Shop App is running on http://127.0.0.1:3000')
