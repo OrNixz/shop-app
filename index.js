@@ -99,6 +99,23 @@ app.delete('/products/:id', wrapAsync(async (req, res) => {
 
 // Sebagai tambahan taruh products/:id di paling bawah, agar yang dibaca terlebih dahulu adalah parameter create, bukan yang id
 
+const validatorHandler = err => {
+    err.status = 400
+    err.message = Object.values(err.errors).map(item => item.message)
+    return new ErrorHandler(err.message, err.status)
+}
+
+// Filter Error Handler
+app.use((err, req, res, next) => {
+    console.dir(err)
+    if (err.name === 'ValidationError') err = validatorHandler(err)
+    if (err.name === 'CastError') {
+        err.status = 404
+        err.message = 'Product is not found'
+    }
+    next(err)
+})
+
 // Default Error Handler
 app.use((err, req, res, next) => {
     const { status = 500, message = 'Something Went Wrong' } = err
