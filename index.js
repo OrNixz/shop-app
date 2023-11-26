@@ -17,11 +17,19 @@ mongoose.connect('mongodb://127.0.0.1/shop_db')
         console.log(err)
     });
 
+// Middleware
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 // express.urlencoded() adalah middleware untuk mengambil data dari form. Setelah dibuat, baru express js bisa membaca data dari body request
 app.use(methodOverride('_method'));
+
+function wrapAsync(fn) {
+    return function (req, res, next) {
+        fn(req, res, next).catch(err => next(err))
+    }
+}
+// Wrapper berguna untuk menghindari penulisan try-catch berulang kali di setiap route.
 
 app.get('/', (req, res) => {
     res.send('Hello World');
@@ -46,11 +54,12 @@ app.get('/products/create', async (req, res) => {
 });
 
 // Save Product
-app.post('/products', async (req, res) => {
+app.post('/products', wrapAsync(async (req, res) => {
     const product = new Product(req.body);
     await product.save();
     res.redirect(`/products/${product._id}`);
-});
+}));
+
 // ---------------------------------------------------------------------
 // 1. app.post('/products', async(req, res) => {: Mendefinisikan rute POST ke endpoint ‘/products’. Fungsi ini akan dipanggil setiap kali ada permintaan POST ke ‘/products’. Parameter req dan res mewakili objek permintaan dan respons HTTP. async menunjukkan bahwa ini adalah fungsi asinkron.
 // 2. const product = new Product(req.body);: Membuat instance baru dari model Product dengan data dari req.body. req.body berisi data yang dikirim oleh klien dalam badan permintaan HTTP.
@@ -59,50 +68,34 @@ app.post('/products', async (req, res) => {
 // ---------------------------------------------------------------------
 
 // Show Product
-app.get('/products/:id', async (req, res, next) => {
+app.get('/products/:id', wrapAsync(async (req, res) => {
     // const product = await Product.findById(req.params.id);
-    try {
-        const { id } = req.params;
-        const product = await Product.findById(id);
-        res.render('products/show', { product });
-    } catch (error) {
-        next(new ErrorHandler('Product Not Found', 404))
-    }
-});
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('products/show', { product });
+}));
 
 // Edit Product
-app.get('/products/:id/edit', async (req, res, next) => {
+app.get('/products/:id/edit', wrapAsync(async (req, res) => {
     // const product = await Product.findById(req.params.id);
-    try {
-        const { id } = req.params;
-        const product = await Product.findById(id);
-        res.render('products/edit', { product });
-    } catch (error) {
-        next(new ErrorHandler('Product Not Found', 404))
-    }
-});
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    res.render('products/edit', { product });
+}));
 
 // Update Product
-app.put('/products/:id', async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const product = await Product.findByIdAndUpdate(id, req.body, { runValidators: true });
-        res.redirect(`/products/${product._id}`);
-    } catch (error) {
-        next(new ErrorHandler('Failed to Update products’roduct', 412))
-    }
-});
+app.put('/products/:id', wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    const product = await Product.findByIdAndUpdate(id, req.body, { runValidators: true });
+    res.redirect(`/products/${product._id}`);
+}));
 
 // Delete Product
-app.delete('/products/:id', async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        await Product.findByIdAndDelete(id);
-        res.redirect('/products');
-    } catch (error) {
-        next(new ErrorHandler('Failed to Delete Product', 404))
-    }
-})
+app.delete('/products/:id', wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    await Product.findByIdAndDelete(id);
+    res.redirect('/products');
+}));
 
 // Sebagai tambahan taruh products/:id di paling bawah, agar yang dibaca terlebih dahulu adalah parameter create, bukan yang id
 
