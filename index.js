@@ -58,6 +58,13 @@ app.post('/garments', wrapAsync(async (req, res) => {
     res.redirect(`/garments`)
 }))
 
+// Show Garment
+app.get('/garments/:id', wrapAsync(async (req, res) => {
+    const { id } = req.params
+    const garment = await Garment.findById(id)
+    res.render('garment/show', { garment })
+}))
+
 // ======================================================================
 //                                Products
 // ======================================================================
