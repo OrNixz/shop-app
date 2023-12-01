@@ -85,6 +85,12 @@ app.post('/garments/:garment_id/products', wrapAsync(async (req, res) => {
     res.redirect(`/garments/${garment_id}`)
 }))
 
+// Delete Garment
+app.delete('/garments/:garment_id', wrapAsync(async (req, res) => {
+    const { garment_id } = req.params
+    await Garment.findByIdAndDelete({ _id: garment_id })
+    res.redirect('/garments')
+}))
 
 // ======================================================================
 //                                Products
