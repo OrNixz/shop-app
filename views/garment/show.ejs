@@ -11,6 +11,12 @@
         <li>Location: <%= garment.location%></li>
         <li>Contact: <%= garment.contact%></li>
     </ul>
+    <h2>Products</h2>
+    <ul>
+        <% for(let product of garment.products) { %>
+            <li><a href="/products/<%= product._id %>"><%= product.name %> - <%= product.brand %></a></li>
+        <% } %>
+    </ul>
     <a href="/garments">All Garments</a><br>
     <a href="/garments/<%= garment._id%>/edit">Edit Garment</a><br>
     <form action="/garments/<%= garment._id %>?_method=DELETE" method="POST">
