@@ -9,12 +9,19 @@ Shop App is a simple, modest online store website on which users could perform C
 ```
 .
 ├── models
-│   └── product.js
-├── views/products
-│   ├── create.ejs
-│   ├── edit.ejs
-|   ├── index.ejs
-|   └── show.ejs
+│   ├── product.js
+|   └── garment.js
+├── views
+|   ├── products
+│   |   ├── create.ejs
+│   |   ├── edit.ejs
+|   |   ├── index.ejs
+|   |   └── show.ejs
+|   └── garments
+│       ├── create.ejs
+│       ├── edit.ejs
+|       ├── index.ejs
+|       └── show.ejs
 ├── .gitignore
 ├── ErrorHandler.js
 ├── README.md
