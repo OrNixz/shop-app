@@ -19,7 +19,6 @@ Shop App is a simple, modest online store website on which users could perform C
 |   |   └── show.ejs
 |   └── garments
 │       ├── create.ejs
-│       ├── edit.ejs
 |       ├── index.ejs
 |       └── show.ejs
 ├── .gitignore
@@ -37,6 +36,9 @@ Shop App is a simple, modest online store website on which users could perform C
 3. Show Product: See detailed information about a specific product.
 4. Edit Product: Update product information, including name, brand, color, price, and category.
 5. Delete Product: Removes a product from the database.
+6. Garment Index: Displays a list of products with their names and locations.
+7. Create Garment: Provides a form for users to add new garments to the system.
+8. Show Garment: Presents detailed information about a particular products. Includes location, contact details, and a list of related products.
 
 ## 3. Getting Started
 1. Make sure you have already installed Node.js and MongoDB on your system.
